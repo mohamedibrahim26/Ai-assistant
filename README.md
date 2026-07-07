@@ -148,8 +148,8 @@ The difference from a regular AI assistant is that Vera accumulates context over
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/mohamedibrahim26/Ai-assitant.git
-cd Ai-assitant
+git clone https://github.com/mohamedibrahim26/ai-life-companion.git
+cd ai-life-companion
 ```
 
 ### 2. Set up the backend
@@ -281,7 +281,7 @@ A single AudioContext is reused for the entire call to prevent browser resource 
 ## Project structure
 
 ```
-Ai-assitant/
+ai-life-companion/
 ├── frontend/                   # React + Vite
 │   ├── src/
 │   │   ├── pages/              # ChatPage, DashboardPage, LoginPage, OnboardingPage, AdminPage

@@ -14,7 +14,15 @@ echo.
 
 :: ── Step 1: Python AI Service (Groq / Llama) ─────────────────────────────────
 echo [1/3] Starting AI Service (Groq + Llama 3.1 8B)...
-set AI_DIR=C:\Users\AMEEN\OneDrive\Desktop\vera AI Chat Personal Assistant\AIChatClone\ai-service
+set AI_DIR=%~dp0ai-service
+
+if not exist "%AI_DIR%\venv" (
+    echo       Setting up Python venv for the first time...
+    cd /d "%AI_DIR%"
+    python -m venv venv
+    call venv\Scripts\activate
+    pip install -r requirements.txt
+)
 
 start "Vera AI Service" cmd /k "cd /d "%AI_DIR%" && venv\Scripts\activate && python main.py"
 
