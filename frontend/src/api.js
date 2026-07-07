@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: 'http://localhost:3001/api' });
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+const api = axios.create({ baseURL: `${BASE_URL}/api` });
 
 // Attach JWT token to every request
 api.interceptors.request.use(cfg => {
@@ -17,7 +19,7 @@ export const authLogin = (email, password) =>
   api.post('/auth/login', { email, password }).then(r => r.data);
 
 export const authMe = (token) =>
-  axios.get('http://localhost:3001/api/auth/me', {
+  axios.get(`${BASE_URL}/api/auth/me`, {
     headers: { Authorization: `Bearer ${token}` }
   }).then(r => r.data);
 

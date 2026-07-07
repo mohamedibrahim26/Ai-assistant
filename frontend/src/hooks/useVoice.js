@@ -255,8 +255,9 @@ export function useVoice() {
   }
 
   async function speakElevenLabs(text, personaId, onEnd, userId) {
+    const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     try {
-      const resp = await fetch('http://localhost:3001/api/tts/speak', {
+      const resp = await fetch(`${BASE_URL}/api/tts/speak`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, persona: personaId, userId }),

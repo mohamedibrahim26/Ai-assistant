@@ -280,10 +280,11 @@ async def safety_check(req: SafetyCheckRequest, _=Depends(verify_service_key)):
 
 if __name__ == "__main__":
     import uvicorn
+    port = int(os.environ.get("PORT", settings.ai_service_port))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=settings.ai_service_port,
-        reload=True,
+        port=port,
+        reload=False,
         log_level="info",
     )
