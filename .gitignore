@@ -55,3 +55,6 @@ Thumbs.db
 # ── Misc ──────────────────────────────────────────────────────────────────────
 *.tmp
 *.bak
+
+# ── Repo helper scripts (local use only) ─────────────────────────────────────
+push-to-github.bat

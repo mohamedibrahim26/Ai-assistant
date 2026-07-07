@@ -130,8 +130,8 @@ The core insight: most AI assistants are stateless and impersonal. Vera is the o
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/mohamedibrahim26/vera.git
-cd vera
+git clone https://github.com/mohamedibrahim26/Ai-assitant.git
+cd Ai-assitant
 ```
 
 ### 2. Configure the backend
