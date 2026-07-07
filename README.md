@@ -9,7 +9,7 @@
    ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝
 ```
 
-**Your personal AI life companion — voice, memory, goals, and emotional intelligence in one app.**
+**A personal AI companion that talks with you, tracks your goals, remembers your story, and genuinely keeps you accountable.**
 
 [![Node.js](https://img.shields.io/badge/Node.js-22+-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev)
@@ -25,64 +25,82 @@
 
 ## What is Vera?
 
-Vera is a full-stack AI life companion — not a generic chatbot, but a personal assistant that knows you. She tracks your goals, reads your mood, remembers your story across sessions, and can hold a real-time voice conversation with you.
+Vera is a full-stack AI life companion. She is not a generic chatbot that forgets you the moment you close the tab. She remembers who you are, what you are working towards, and how you have been feeling lately, and she brings all of that into every conversation.
 
-The core insight: most AI assistants are stateless and impersonal. Vera is the opposite — she builds a persistent memory of who you are, adapts her persona to your communication style, and gives you genuine accountability on the goals that matter most to you.
+Here is what that looks like in practice. You open the app in the morning and Vera already knows you have been trying to wake up early this week. She asks how it went. You tell her you missed it again. She does not lecture you, she sits with that for a moment and then asks what got in the way. Later in the day you can call her, literally call her using your microphone and speaker, and have a real back-and-forth conversation. She speaks back to you in a natural voice using ElevenLabs. At the end of the week she has a picture of your mood, your streaks, and what you actually talked about, and she uses all of it when she responds to you.
+
+The difference from a regular AI assistant is that Vera accumulates context over time. Most AI tools start fresh every session. Vera builds a persistent memory from your conversations and uses it to give you responses that feel like they are coming from someone who knows you, not someone you just met.
 
 ---
 
-## Features
+## What can Vera do?
+
+**Voice calls.** You can start a live voice call with Vera directly from the app. She listens to you through the microphone using the Web Speech API, processes your message, and speaks back using ElevenLabs TTS. The call handles silence gracefully and restarts automatically if the mic drops. You can interrupt her mid-sentence by tapping the mic button.
+
+**Goal tracking with real accountability.** You set goals and give each one a priority tier: Locked In (things you are fully committed to), Wanting It (working towards), or Would Be Nice (low pressure). For Locked In goals, Vera tracks your daily streak, counts missed days, and sends you browser reminders at 9 AM and 8 PM if you have not checked in. She also references your goals during conversation so she can actually hold you to them.
+
+**Mood tracking.** Each day you can log how you are feeling on a 1 to 5 scale. Vera pulls in your last 7 days of mood data when she responds to you, so if you have had a rough week she picks up on that without you having to explain it every time.
+
+**Long-term memory.** Vera periodically summarises your older conversations and stores them as memory entries. The next time you talk she has access to those summaries, so she can reference things you told her weeks ago without the conversation history growing too long and slowing down responses.
+
+**Multilingual support.** Vera supports 30+ languages and always replies in the language you have configured in your profile, regardless of what language you type in. Voice recognition also adjusts to your locale automatically.
+
+**Admin dashboard.** There is a built-in admin view that shows all users, their mood trends, goal health, and flags anyone who has logged low mood several days in a row or abandoned a goal they were committed to.
+
+---
+
+## Features at a glance
 
 | Feature | Details |
 |---|---|
-| **Live voice calls** | Real-time two-way voice — Web Speech API (STT) + ElevenLabs TTS. Auto-restart on silence, emotion-matched responses. |
-| **Long-term memory** | Conversations are periodically summarised into persistent memory. Vera references them in future sessions. |
-| **Goal tracking** | Three tiers: 🔴 Locked In, 🟡 Wanting It, 🟢 Would Be Nice. Streak tracking, daily check-in nudges, missed-day counters. |
-| **Mood tracking** | Daily mood check-ins (1–5 scale). 7-day mood history fed into Vera's context window. |
-| **Push notifications** | Browser notifications at 9 AM and 8 PM for Locked In goals that haven't been checked in yet. |
-| **30+ languages** | Vera always replies in the user's configured language, regardless of what language they type in. |
-| **Adaptive persona** | Vera adapts her tone based on the user's gender — warm and nurturing for males, calm and grounding for females. |
-| **Memory panel** | Users can view and edit everything Vera knows about them. |
-| **Conversation search** | Full-text keyword search across all past messages. |
-| **Progress log** | Per-goal progress notes with timestamps. |
-| **Chat export** | Download full chat history as a formatted HTML file. |
-| **Admin dashboard** | Overview of all users, mood trends, goal health, and low-mood / abandoned-goal alerts. |
-| **PWA-ready** | Service worker + web app manifest — installable on desktop and mobile. |
-| **Dark / light mode** | System-aware theme with manual toggle. |
+| Live voice calls | Real-time two-way voice using Web Speech API for input and ElevenLabs for spoken responses |
+| Long-term memory | Older conversations are summarised and stored so Vera remembers you across sessions |
+| Goal tracking | Three priority tiers with streak tracking, missed-day counters, and daily check-in nudges |
+| Mood tracking | Daily mood check-ins on a 1 to 5 scale, with 7-day history fed into Vera's context |
+| Push notifications | Browser reminders at 9 AM and 8 PM for Locked In goals not yet checked in |
+| 30+ languages | Vera always responds in your configured language, no matter what you type in |
+| Adaptive persona | Vera adjusts her tone based on your gender, warmer and nurturing for males, calm and grounding for females |
+| Memory panel | View and edit everything Vera knows about you at any time |
+| Conversation search | Search through all past messages by keyword |
+| Progress log | Add notes to individual goals to track what you actually did |
+| Chat export | Download your full conversation history as an HTML file |
+| Admin dashboard | Monitor users, mood trends, goal health, and get alerts for at-risk users |
+| PWA ready | Installable on desktop and mobile via service worker and web app manifest |
+| Dark and light mode | System-aware theme with a manual toggle |
 
 ---
 
-## Architecture
+## How it works
 
 ```
 ┌─────────────────────────────────────────────┐
 │              React Frontend                 │
-│   (Vite + Tailwind CSS — port 5173)         │
+│        (Vite + Tailwind CSS, port 5173)     │
 │                                             │
 │  ChatPage  DashboardPage  OnboardingPage    │
 │  VoiceCall  GoalModal  MoodCheck  Sidebar   │
 └──────────────────┬──────────────────────────┘
                    │ REST API (axios)
 ┌──────────────────▼──────────────────────────┐
-│           Node.js / Express Backend          │
-│               (port 3001)                   │
+│         Node.js / Express Backend           │
+│                 (port 3001)                 │
 │                                             │
 │  /chat/:id    /goals    /mood    /tts       │
 │  /auth        /user     /admin  /insights   │
 │                                             │
-│  SQLite (node:sqlite — synchronous)         │
-│  JWT auth · bcryptjs · node-cron            │
+│  SQLite (node:sqlite, synchronous)          │
+│  JWT auth, bcryptjs, node-cron              │
 └──────────────────┬──────────────────────────┘
                    │ HTTP (internal)
 ┌──────────────────▼──────────────────────────┐
-│        Python FastAPI AI Service            │
-│               (port 8000)                   │
+│         Python FastAPI AI Service           │
+│                 (port 8000)                 │
 │                                             │
-│  Provider-agnostic LLM router:              │
-│    Groq → OpenAI → Anthropic → Ollama      │
+│  LLM router: Groq, OpenAI, Anthropic,      │
+│  Ollama with automatic fallback             │
 │                                             │
-│  RAG (ChromaDB) · Safety checks             │
-│  Memory summarisation · Career roadmap      │
+│  RAG via ChromaDB, safety checks,          │
+│  memory summarisation                       │
 └─────────────────────────────────────────────┘
 ```
 
@@ -91,41 +109,41 @@ The core insight: most AI assistants are stateless and impersonal. Vera is the o
 ## Tech Stack
 
 **Frontend**
-- React 18 + Vite + Tailwind CSS
-- Web Speech API (STT — continuous recognition with BCP-47 locale support, auto-restart on `no-speech`)
-- ElevenLabs TTS (`eleven_turbo_v2_5` for English, `eleven_flash_v2_5` for others)
-- PWA: Service Worker + Web App Manifest
+- React 18 with Vite and Tailwind CSS
+- Web Speech API for continuous speech recognition with BCP-47 locale support and auto-restart on silence
+- ElevenLabs TTS using `eleven_turbo_v2_5` for English and `eleven_flash_v2_5` for other languages
+- PWA support via Service Worker and Web App Manifest
 
 **Backend**
-- Node.js 22 + Express
-- SQLite via `node:sqlite` (built-in — zero extra dependencies)
-- JWT authentication + bcryptjs
-- `node-cron` for daily check-ins and weekly recaps
-- ElevenLabs TTS proxy with graceful fallback to Web Speech API synthesis
+- Node.js 22 with Express
+- SQLite via the built-in `node:sqlite` module, so there are no extra database dependencies to install
+- JWT authentication and bcryptjs for password hashing
+- `node-cron` for scheduling daily check-ins and weekly recap messages
+- ElevenLabs TTS proxy with a fallback to the browser's built-in Web Speech synthesis
 
 **AI Service (Python)**
-- FastAPI + Pydantic
-- Groq (primary: `llama-3.1-8b-instant`, 500k tokens/day — no billing required for normal usage)
-- OpenAI, Anthropic, Ollama (fallback chain via tenacity)
-- ChromaDB + sentence-transformers for RAG
-- Provider-agnostic router — swap models without touching the Node backend
+- FastAPI with Pydantic schemas
+- Groq as the primary LLM provider running `llama-3.1-8b-instant` at 500k tokens per day with no billing required for typical usage
+- OpenAI, Anthropic, and Ollama as fallback providers via tenacity retry logic
+- ChromaDB with sentence-transformers for retrieval-augmented generation
+- Provider-agnostic router so you can switch models without touching any Node.js code
 
-**AI / Prompt Design**
-- System prompt engineered for emotional intelligence (~400 tokens — optimised for low latency)
-- Voice mode: hard 25-word response limit, emotion-mirroring rules
-- Consecutive-message deduplication before Groq calls (prevents API rejection on malformed history)
-- Long-term memory via periodic summarisation stored in `memory_summaries` table
-- Automated profile extraction from conversation (name, age, profession, gender, life context)
+**AI and Prompt Design**
+- System prompt tuned for emotional intelligence, kept to roughly 400 tokens to keep response times fast
+- Voice mode enforces a 25-word response limit and mirrors the user's emotional tone
+- Consecutive message deduplication before Groq API calls to prevent rejection from malformed history
+- Long-term memory built by periodically summarising older conversations and storing them in a `memory_summaries` table
+- Automated profile extraction that picks up your name, age, profession, gender, and life context from the first few conversations
 
 ---
 
-## Quick Start
+## Getting started
 
-### Prerequisites
-- Node.js 22+
-- Python 3.11+
-- [Groq API key](https://console.groq.com) (free — 500k tokens/day on llama-3.1-8b-instant)
-- (Optional) [ElevenLabs API key](https://elevenlabs.io) for voice — Starter plan required for library voices
+### What you need
+- Node.js 22 or higher
+- Python 3.11 or higher
+- A [Groq API key](https://console.groq.com) (free account, 500k tokens per day on llama-3.1-8b-instant)
+- Optionally an [ElevenLabs API key](https://elevenlabs.io) if you want voice. The Starter plan is required for library voices.
 
 ### 1. Clone the repo
 
@@ -134,52 +152,53 @@ git clone https://github.com/mohamedibrahim26/Ai-assitant.git
 cd Ai-assitant
 ```
 
-### 2. Configure the backend
+### 2. Set up the backend
 
 ```bash
 cd backend
-cp .env.example .env   # then add your ELEVENLABS_API_KEY
+cp .env.example .env
 npm install
 ```
 
-`.env` format:
+Open `.env` and fill in your values:
+
 ```
 AI_SERVICE_URL=http://localhost:8000
 PORT=3001
 ELEVENLABS_API_KEY=your_key_here
 ```
 
-### 3. Configure the AI service
+### 3. Set up the AI service
 
 ```bash
 cd ../ai-service
 python -m venv venv
 venv\Scripts\activate        # Windows
-# source venv/bin/activate   # macOS / Linux
+# source venv/bin/activate   # macOS or Linux
 pip install -r requirements.txt
-cp .env.example .env         # then add your GROQ_API_KEY
+cp .env.example .env
 ```
 
-### 4. Start everything
+Open `.env` and add your GROQ_API_KEY.
 
-**Windows — one click:**
-```
-Double-click start.bat
-```
+### 4. Run everything
 
-**Manual (any OS):**
+On Windows, just double-click `start.bat` and it will open all three services and launch the browser.
+
+If you prefer to run manually:
+
 ```bash
-# Terminal 1 — AI service
+# Terminal 1
 cd ai-service && python main.py
 
-# Terminal 2 — Backend
+# Terminal 2
 cd backend && npm run dev
 
-# Terminal 3 — Frontend
+# Terminal 3
 cd frontend && npm run dev
 ```
 
-Open **http://localhost:5173**
+Then open **http://localhost:5173** in your browser.
 
 ---
 
@@ -189,22 +208,22 @@ Open **http://localhost:5173**
 | Method | Endpoint | Description |
 |---|---|---|
 | `POST` | `/chat/:userId` | Send a message. Body: `{ message, voiceMode? }` |
-| `GET` | `/chat/:userId/history` | Fetch message history |
+| `GET` | `/chat/:userId/history` | Get message history |
 | `DELETE` | `/chat/:userId/history` | Clear all messages for a user |
 
 ### Goals
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/goals/:userId` | List active goals |
-| `POST` | `/goals/:userId` | Create a goal (`{ title, tier, deadline?, description? }`) |
-| `PATCH` | `/goals/:userId/:goalId/checkin` | Mark today's check-in |
-| `PATCH` | `/goals/:userId/:goalId` | Update goal |
-| `DELETE` | `/goals/:userId/:goalId` | Archive goal |
+| `POST` | `/goals/:userId` | Create a goal with `{ title, tier, deadline?, description? }` |
+| `PATCH` | `/goals/:userId/:goalId/checkin` | Mark today's check-in for a goal |
+| `PATCH` | `/goals/:userId/:goalId` | Update a goal |
+| `DELETE` | `/goals/:userId/:goalId` | Archive a goal |
 
 ### Mood
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/mood/:userId` | Log mood score (1–5) |
+| `POST` | `/mood/:userId` | Log a mood score from 1 to 5 |
 | `GET` | `/mood/:userId` | Get mood history |
 
 ### TTS
@@ -215,100 +234,101 @@ Open **http://localhost:5173**
 ### Auth
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/auth/register` | Register: `{ email, password, name }` |
-| `POST` | `/auth/login` | Login: `{ email, password }` → `{ token, userId }` |
+| `POST` | `/auth/register` | Register with `{ email, password, name }` |
+| `POST` | `/auth/login` | Login with `{ email, password }`, returns `{ token, userId }` |
 
 ---
 
-## Database Schema
+## Database
 
 ```sql
-users            — id, email, password_hash, name, age, gender, profession,
-                   language, life_context, personality_notes, onboarded
+users            -- id, email, password_hash, name, age, gender, profession,
+                    language, life_context, personality_notes, onboarded
 
-messages         — id, user_id, role (user|assistant), content, created_at
+messages         -- id, user_id, role (user or assistant), content, created_at
 
-goals            — id, user_id, title, description, tier, deadline, status,
-                   streak, best_streak, days_missed, last_streak_date
+goals            -- id, user_id, title, description, tier, deadline, status,
+                    streak, best_streak, days_missed, last_streak_date
 
-moods            — id, user_id, score (1–5), note, created_at
+moods            -- id, user_id, score (1 to 5), note, created_at
 
-memory_summaries — id, user_id, summary, message_count, period_start, period_end
+memory_summaries -- id, user_id, summary, message_count, period_start, period_end
 
-goal_progress    — id, goal_id, user_id, note, created_at
+goal_progress    -- id, goal_id, user_id, note, created_at
 
-invites          — id, inviter_id, invitee_email, status, created_at
+invites          -- id, inviter_id, invitee_email, status, created_at
 ```
 
 ---
 
-## Voice Call Design
+## Voice call pipeline
 
-The voice pipeline runs with minimal server round-trips:
+When you start a voice call, here is what happens under the hood:
 
 ```
 Microphone
-  → Web Speech API  (continuous STT, BCP-47 locale)
-  → POST /chat      (voiceMode: true)
-  → Groq Llama 3.1  (25-word limit enforced in system prompt)
-  → POST /tts       → ElevenLabs
-  → AudioBuffer     → Speaker
+  -> Web Speech API (continuous speech-to-text, locale-aware)
+  -> POST /chat with voiceMode: true
+  -> Groq Llama 3.1 (response limited to 25 words in voice mode)
+  -> POST /tts -> ElevenLabs
+  -> AudioBuffer -> Speaker
 ```
 
-Auto-restart on `no-speech` / `audio-capture` errors keeps the call alive during silence. Voice selection is language-aware: Rachel for English, Josh for all other languages.
+A single AudioContext is reused for the entire call to prevent browser resource exhaustion. If Chrome's speech API gets into a bad state after extended use, the app detects repeated failures and pauses for 10 seconds to let it recover before resuming.
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
-vera/
+Ai-assitant/
 ├── frontend/                   # React + Vite
 │   ├── src/
 │   │   ├── pages/              # ChatPage, DashboardPage, LoginPage, OnboardingPage, AdminPage
-│   │   ├── components/         # VoiceCall, GoalModal, MoodCheck, Sidebar, SearchBar, ...
+│   │   ├── components/         # VoiceCall, GoalModal, MoodCheck, Sidebar, SearchBar, etc.
 │   │   ├── hooks/              # useVoice, useNotifications
 │   │   └── api.js              # Axios client
-│   ├── public/                 # manifest.json, sw.js (PWA)
+│   ├── public/                 # manifest.json, sw.js (PWA assets)
 │   └── vite.config.js
 │
 ├── backend/                    # Node.js + Express
-│   ├── routes/                 # chat, goals, mood, tts, auth, user, admin, insights, ...
+│   ├── routes/                 # chat, goals, mood, tts, auth, user, admin, insights, etc.
 │   ├── ai/
-│   │   └── vera.js             # Vera brain: prompt builder, memory, profile extraction
-│   ├── scheduler.js            # node-cron: daily check-ins, weekly recaps
-│   ├── db.js                   # SQLite setup + schema migrations
+│   │   └── vera.js             # Vera's brain: prompt builder, memory, profile extraction
+│   ├── scheduler.js            # node-cron jobs for daily check-ins and weekly recaps
+│   ├── db.js                   # SQLite setup and schema migrations
 │   └── server.js
 │
 ├── ai-service/                 # Python FastAPI
-│   ├── services/               # llm_service, rag_service, embedding_service, ...
-│   ├── models/schemas.py       # Pydantic request / response models
-│   ├── config.py               # Provider config + fallback chain
+│   ├── services/               # llm_service, rag_service, embedding_service, etc.
+│   ├── models/schemas.py       # Pydantic request and response models
+│   ├── config.py               # Provider config and fallback chain
 │   └── main.py
 │
-└── start.bat                   # One-click launcher (Windows)
+└── start.bat                   # One-click launcher for Windows
 ```
 
 ---
 
-## Roadmap
+## What is coming next
 
-- [ ] Weekly recap message (every Sunday)
-- [ ] Progress charts — mood trends, goal streaks visualised
-- [ ] AI-powered goal suggestions from conversation history
-- [ ] Voice cloning — personalise Vera's voice (ElevenLabs IVC)
-- [ ] Mobile PWA — push notifications on iOS / Android
-- [ ] Invite system — share Vera with friends and family
+- Weekly recap every Sunday where Vera reflects on your week with you
+- Progress charts showing mood trends and goal streak history over time
+- AI-powered goal suggestions based on what you talk about with Vera
+- Voice cloning so you can personalise Vera's voice using ElevenLabs IVC
+- Mobile PWA with push notifications on iOS and Android
+- Invite system so you can share Vera with friends or family
 
 ---
 
 ## Author
 
-**Mohamed Ibrahim** — M.Tech, Computer Science & Engineering, VIT  
-[GitHub](https://github.com/mohamedibrahim26) · [LinkedIn](https://linkedin.com/in/mohamedibrahim26) · ibrahim764566@gmail.com
+**Mohamed Ibrahim** - M.Tech, Computer Science and Engineering, VIT
+
+[GitHub](https://github.com/mohamedibrahim26) | [LinkedIn](https://linkedin.com/in/mohamedibrahim26) | ibrahim764566@gmail.com
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT - see [LICENSE](LICENSE).
