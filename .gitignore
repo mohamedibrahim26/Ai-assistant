@@ -32,7 +32,7 @@ __pycache__/
 *.gguf
 *.bin
 *.safetensors
-vector_store/
+chroma_db/
 orion-xai-merged/
 orion-xai-lora/
 
