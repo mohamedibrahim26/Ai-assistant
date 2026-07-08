@@ -6,10 +6,11 @@ Wraps chromadb to provide a simple interface for:
   - query_collection: nearest-neighbour search by embedding
   - delete_collection: drop a collection entirely
 """
+from __future__ import annotations
 
 import logging
 import uuid
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 import chromadb
 from chromadb.config import Settings as ChromaSettings
@@ -20,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 # ── Client (module-level singleton) ───────────────────────────────────────────
 
-_client: chromadb.Client | None = None
+_client: Optional[chromadb.Client] = None
 
 
 def _get_client() -> chromadb.Client:
