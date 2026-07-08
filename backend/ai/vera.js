@@ -78,10 +78,15 @@ VOICE CALL — spoken out loud, not typed:
 - Never say "I can't hear you" or "I don't understand". If unclear: "Wait, say that again?"` : ''}`;
 }
 
+const AI_SERVICE_SECRET = process.env.AI_SERVICE_SECRET || '';
+
 async function callAIService(messages, systemPrompt, maxTokens = 300) {
   const response = await fetch(`${AI_SERVICE_URL}/chat/complete`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(AI_SERVICE_SECRET && { 'x-service-key': AI_SERVICE_SECRET }),
+    },
     body: JSON.stringify({
       messages,
       system_prompt: systemPrompt,
